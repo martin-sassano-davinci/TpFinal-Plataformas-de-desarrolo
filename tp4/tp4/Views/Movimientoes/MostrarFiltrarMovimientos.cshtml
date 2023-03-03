@@ -1,0 +1,32 @@
+﻿@model IEnumerable<tp4.Models.Movimiento>
+
+<h2>Movimientos de banco filtrados por usuario</h2>
+
+@if (!Model.Any())
+{
+    <p>No se encontraron movimientos que coincidan con los criterios de búsqueda.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Detalle</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movimiento in Model)
+            {
+                <tr>
+                    <td>@movimiento.detalle</td>
+                    <td>@movimiento.monto</td>
+                    <td>@movimiento.fecha.ToShortDateString()</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}

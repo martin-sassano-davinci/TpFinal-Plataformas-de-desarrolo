@@ -1,0 +1,58 @@
+﻿@model IEnumerable<tp4.Models.Movimiento>
+
+@{
+    ViewData["Title"] = "Movimientos";
+}
+
+<h1>Movimientos</h1>
+
+<p>
+    <a asp-action="FiltrarMovimientos" asp-route-id="@ViewBag.idCaja">Filtrar movimientos</a>
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.detalle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.monto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fecha)
+            </th>
+            
+            
+        </tr>
+    </thead>
+    <tbody>
+      
+       
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.detalle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.monto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fecha)
+                    </td>
+
+
+                </tr>
+            }
+        
+        @if (ViewBag.msg != null)
+        {
+                <div class="alert alert-danger alert-dismissible text-center" role="alert">
+                    <p>@ViewBag.msg</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+        }
+    </tbody>
+</table>

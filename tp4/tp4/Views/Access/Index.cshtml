@@ -1,0 +1,51 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewBag.Title = "Index";
+    
+}
+
+<div class="row">
+    <form id="frm">
+        <div class="col-lg-6 col-lg-offset-3">
+            Usuario
+            <input type="number" name="dni" />
+            Password
+            <input type="password" name="password" />
+            <button type="submit" class="btn btn-primary">Iniciar Sesion </button>
+            
+        </div>
+        
+       
+        <p class="alert alert-danger">@ViewData["msg"]</p>
+        
+    </form>
+</div>
+
+@section Scripts{
+<script>
+    
+    $(document).ready(function(){
+
+        $("#frm").submit(function(e){
+            e.preventDefault();
+            url = "@Url.Content("~/Access/Enter")"
+
+            parametros=$(this).serialize();
+
+            $.post(url, parametros, function(data){
+                
+                
+                if(data =="1"){
+                    alert("No se encontro el usuario")
+                   // document.location.href = "@Url.Content("~/Access/Enter")";
+                } else {
+                    alert(data);
+                }
+                
+            })
+        })})
+</script>
+}

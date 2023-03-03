@@ -1,0 +1,51 @@
+﻿@model tp4.Models.Tarjeta
+
+
+@{
+    ViewData["Title"] = "Pagar tarjeta";
+}
+
+<h1>Pagar tarjeta</h1>
+
+
+
+<form asp-action="PagarTarjeta">
+    <input type="hidden" asp-for="id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <h4>Consumo a pagar: @ViewBag.tarjetaConsumo</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Caja de ahorro</th>
+                    <th scope="col">Saldo</th>
+                    <th scope="col">Pagar</th>
+                  
+                </tr>
+            </thead>
+        <tbody>
+                @if(ViewBag.cajasCbuUsuario != null && ViewBag.cajasSaldoUsuario != null){
+
+                @foreach (var item1 in ViewBag.cajasCbuUsuario)
+        {
+                    var index = ViewBag.cajasCbuUsuario.IndexOf(item1);
+                    var item2 = ViewBag.cajasSaldoUsuario[index];
+            <tr>
+                            <td><input type="number" name="cbu" id="cbu" readonly placeholder="@item1" value="@item1" /></td>
+                <td>@item2</td>
+                 <td><input type="submit" value="Pagar" class="btn btn-primary" /></td>
+            </tr>
+        }
+      }
+    </tbody>
+  </table>
+        <@if (ViewBag.msg != null && ViewBag.msg != "")
+             {
+    <h3 class="alert alert-danger mt-2">@ViewBag.msg</h3>
+}
+</form>
+
+    
+
+
+ 

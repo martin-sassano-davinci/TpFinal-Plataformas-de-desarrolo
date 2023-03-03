@@ -1,0 +1,80 @@
+﻿@model tp4.Models.Pago
+
+
+@{
+    ViewData["Title"] = "Pagar pago";
+}
+
+<h1>Pagar pago</h1>
+
+
+
+    <form asp-action="PagarPago">
+    <input type="hidden" asp-for="id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <h4>Consumo a pagar: @ViewBag.pagoMonto</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Caja de ahorro</th>
+                    <th scope="col">Saldo</th>
+                    <th scope="col">Pagar</th>
+
+                </tr>
+            </thead>
+            <tbody>
+               
+                @if (ViewBag.cajasCbuUsu != null && ViewBag.cajasSaldoUsu != null)
+                {
+                    @foreach (var item1 in ViewBag.cajasCbuUsu)
+                    {
+                        var index = ViewBag.cajasCbuUsu.IndexOf(item1);
+                        var item2 = ViewBag.cajasSaldoUsu[index];
+                        <tr>
+                            <td>Cbu <input type="number" name="cbu" id="cbu" readonly placeholder="@item1" value="@item1" /></td>
+                            <td>@item2</td>
+                            <td><input type="submit" value="Pagar" class="btn btn-primary" /></td>
+                        </tr>
+                    }
+                } 
+            </tbody>
+        </table>
+
+        <!-- 
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Tarjetas</th>
+                    <th scope="col">Consumo</th>
+                    <th scope="col">Limite</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @if (ViewBag.tarjetaUsu != null && ViewBag.tarjetaConsumoUsu != null )
+                {
+                    @foreach (var item1 in ViewBag.tarjetaUsu)
+                    {
+                        var index = ViewBag.tarjetaUsu.IndexOf(item1);
+                        var item2 = ViewBag.tarjetaConsumoUsu[index];
+                        var item3 = ViewBag.tarjetaLimiteUsu[index];
+                        <tr>
+
+                            <input type="hidden" asp-route-id="@ViewBag.tarjetaIdUsu" />
+                            <td>Tarjeta <input type="number" name="tarjeta" id="tarjeta" readonly placeholder="@item1" value="@item1" /></td>
+                            <td>@item2</td>
+                            <td>@item3</td>
+                            <td><input type="submit" value="Pagar" class="btn btn-primary" /></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        -->
+        <@if (ViewBag.msg != null && ViewBag.msg != "")
+             {
+    <h3 class="alert alert-danger mt-2">@ViewBag.msg</h3>
+}
+</form>

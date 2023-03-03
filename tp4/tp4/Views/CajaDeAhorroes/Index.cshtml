@@ -1,0 +1,55 @@
+﻿@model IEnumerable<tp4.Models.CajaDeAhorro>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Crear nuevo CBU</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.cbu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.saldo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.cbu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.saldo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a> |
+                    <a asp-action="AgregarUsuarioACaja" asp-route-id="@item.id">Agregar titular</a> |
+                    <a asp-action="EliminarUsuarioDeCaja" asp-route-id="@item.id">Eliminar titular</a> |
+                    <a asp-action="Depositar" asp-route-id="@item.id">Depositar</a> |
+                    <a asp-action="Retirar" asp-route-id="@item.id">Retirar</a> |
+                    <a asp-action="Transferir" asp-route-id="@item.id">Transferir</a> |
+                    <a asp-controller="Movimientoes" asp-action="Index" asp-route-id="@item.id">Ver movimientos</a>
+            </td>
+        </tr>
+}
+        @if (ViewBag.msg != null)
+        {
+            <div class="alert alert-danger alert-dismissible text-center" role="alert">
+                <p>@ViewBag.msg</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </tbody>
+
+</table>

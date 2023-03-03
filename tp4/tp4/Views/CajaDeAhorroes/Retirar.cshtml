@@ -1,0 +1,29 @@
+﻿@model tp4.Models.CajaDeAhorro
+
+
+@{
+    ViewData["Title"] = "Retirar";
+}
+
+<h1>Retirar</h1>
+
+    <h4>CajaDeAhorro</h4>
+    <hr />
+   
+
+    <form asp-action="Retirar">
+        <input type="hidden" asp-for="id" />
+        <label for="monto">Monto a depositar:</label>
+    <input type="number" class="form-control" name="monto" placeholder="Monto a retirar" min="1">
+    <input type="submit" value="Retirar" class="btn btn-danger mt-2" /> |
+        <a asp-action="Index">Back to List</a>
+    <@if (ViewBag.msg != null && ViewBag.msg != "")
+             {
+    <h3 class="alert alert-danger mt-2">@ViewBag.msg</h3>
+}
+    </form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

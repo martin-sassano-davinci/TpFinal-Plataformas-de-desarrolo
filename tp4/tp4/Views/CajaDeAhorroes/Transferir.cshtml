@@ -1,0 +1,31 @@
+﻿@model tp4.Models.CajaDeAhorro
+
+
+@{
+    ViewData["Title"] = "Transferir";
+}
+
+<h1>Transferir</h1>
+
+    <h4>CajaDeAhorro</h4>
+    <hr />
+
+
+<form asp-action="Transferir">
+        <input type="hidden" asp-for="id" />
+    <label for="cbuDestino">Cbu de la cuenta que desea transferir:</label>
+    <input type="number" class="form-control" name="cbuDestino" placeholder="CBU a transferir" min="0">
+    <label for="monto">Monto a transferir:</label>
+    <input type="number" class="form-control" name="monto" placeholder="Monto a transferir" >
+        <input type="submit" value="Depositar" class="btn btn-danger mt-2" /> |
+        <a asp-action="Index">Back to List</a>
+    <@if (ViewBag.msg != null && ViewBag.msg != "")
+             {
+    <h3 class="alert alert-danger mt-2">@ViewBag.msg</h3>
+}
+    </form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

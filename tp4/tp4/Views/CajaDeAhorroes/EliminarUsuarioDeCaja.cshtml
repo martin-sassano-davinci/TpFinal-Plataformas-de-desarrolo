@@ -1,0 +1,65 @@
+﻿@model tp4.Models.CajaDeAhorro
+
+
+@{
+    ViewData["Title"] = "Eliminar titular";
+}
+
+<h1>Eliminar titular</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CajaDeAhorro</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.cbu)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.cbu)
+        </dd>
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.titulares)
+    </dt>
+     <dd class="col-sm-10">
+            
+                
+                
+ <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Dni</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+        </tr>
+   </thead>
+    <tbody>
+        @if(Model.titulares != null){
+        @foreach (var titulares in Model.titulares)
+            {
+                    <tr>
+                        <td>@titulares.dni</td>
+                        <td>@titulares.nombre</td>
+                        <td>@titulares.apellido</td>
+                    </tr>
+            }
+        }
+    
+    </tbody>
+  </table>
+            
+        </dd>
+    </dl>
+    
+    <form asp-action="EliminarUsuarioDeCaja">
+        <input type="hidden" asp-for="id" />
+        <label for="dni">Dni:</label>
+        <input type="number" class="form-control" name="dni" placeholder="Dni del titular que quiere eliminar">
+        <input type="submit" value="Eliminar titular" class="btn btn-danger mt-2" /> |
+        <a asp-action="Index">Back to List</a>
+        <@if (ViewData["msg"] != null && ViewData["msg"] != "")
+             {
+    <h3 class="alert alert-danger mt-2">@ViewData["msg"]</h3>
+}
+    </form>
+</div>

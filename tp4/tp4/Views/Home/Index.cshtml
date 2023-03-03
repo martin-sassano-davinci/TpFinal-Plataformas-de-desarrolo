@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido al sitio oficial del Home Banking,  </h1>
+    <h2 class="display-4">Elegi la opcion que desees</h2>
+    <a class="btn btn-primary"  asp-controller="Home" asp-action="Logout">
+        Cerrar sesión
+    </a>
+    <a class="btn btn-primary" asp-controller="CajaDeAhorroes" asp-action="Index">
+        Caja de ahorro
+    </a>
+    <a class="btn btn-primary" asp-controller="Pagoes" asp-action="Index">
+        Pagos
+    </a>
+    <a class="btn btn-primary" asp-controller="PlazoFijoes" asp-action="Index">
+        Plazo fijo
+    </a>
+    <a class="btn btn-primary" asp-controller="Tarjetas" asp-action="Index">
+        Tarjetas
+    </a>
+    <a class="btn btn-primary" asp-controller="Usuarios" asp-action="Index">
+        Usuarios
+    </a>
+</div>
