@@ -46,8 +46,7 @@ namespace tp4.Controllers
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
             if (user == null)
             {
-                ViewData["msg"] = "No tiene permiso para ver esta pagina, por favor inicie sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if (tarjetasUser == null)
             {
@@ -65,31 +64,7 @@ namespace tp4.Controllers
 
         }
 
-        // GET: Tarjetas/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null || user.isAdmin == false)
-            {
-                ViewData["msg"] = "No tiene permiso para ver esta pagina";
-                return View();
-            }
-            if (id == null || _context.tarjetas == null)
-            {
-                return NotFound();
-            }
-
-            var tarjeta = await _context.tarjetas
-                .Include(t => t.titular)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (tarjeta == null)
-            {
-                return NotFound();
-            }
-
-            return View(tarjeta);
-        }
+        
 
         // GET: Tarjetas/Create
         public IActionResult Create()
@@ -134,6 +109,12 @@ namespace tp4.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,id_titular,numero,codigoV,limite,consumo")] Tarjeta tarjeta)
         {
+            var sesion = HttpContext.Session.GetInt32("usuario");
+            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(tarjeta);
@@ -147,6 +128,12 @@ namespace tp4.Controllers
         // GET: Tarjetas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var sesion = HttpContext.Session.GetInt32("usuario");
+            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             if (id == null || _context.tarjetas == null)
             {
                 return NotFound();
@@ -183,47 +170,23 @@ namespace tp4.Controllers
                     ViewData["msg"] = "No se encontro la tarjeta";
                     return View();
                 }
-                TarjetaAModificar.limite = limite;
-                _context.Update(TarjetaAModificar);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Tarjetas");
-                
+                if(user.isAdmin == true)
+                {
+                    TarjetaAModificar.limite = limite;
+                    _context.Update(TarjetaAModificar);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index", "Tarjetas");
+                }
+                ViewData["msg"] = "Solamente un administrador puede modificar el limite de la tarjeta";
+                return View();
+
             }
             catch (Exception ex)
             {
                 ViewData["msg"] = "Error: " + ex.Message;
                 return View();
             }
-            //return contexto.tarjetas.Where(tarjeta => tarjeta.id == Id).FirstOrDefault()
-            /*
-            if (id != tarjeta.id)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(tarjeta);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TarjetaExists(tarjeta.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["id_titular"] = new SelectList(_context.usuarios, "id", "apellido", tarjeta.id_titular);
-            return View(tarjeta);
-            */
         }
 
         // GET: Tarjetas/Delete/5
@@ -291,19 +254,7 @@ namespace tp4.Controllers
             }
         }
 
-        /* if (_context.tarjetas == null)
-        {
-            return Problem("Entity set 'MiContexto.tarjetas'  is null.");
-        }
-        var tarjeta = await _context.tarjetas.FindAsync(idTarjeta);
-        if (tarjeta != null)
-        {
-            _context.tarjetas.Remove(tarjeta);
-        }
 
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-        */
 
         private bool TarjetaExists(int id)
         {
@@ -323,8 +274,14 @@ namespace tp4.Controllers
                 ViewData["msg"] = "No se encontró la tarjeta";
                 return View();
             }
-
+            if (buscarTarjeta.consumo == 0)
+            {
+                ViewData["msg"] = "No hay consumo pendiente de pago";
+                return View();
+            }
+            
             ViewBag.cajasCbuUsuario = user.cajas.Where(c=> c.saldo >= buscarTarjeta.consumo).Select(c =>c.cbu).ToList();
+            ViewBag.cajasIdUsuario = user.cajas.Where(c => c.saldo >= buscarTarjeta.consumo).Select(c => c.id).ToList();
             ViewBag.cajasSaldoUsuario = user.cajas.Where(c => c.saldo >= buscarTarjeta.consumo).Select(c => c.saldo).ToList();
             ViewBag.tarjetaConsumo = buscarTarjeta.consumo;
             
@@ -332,7 +289,7 @@ namespace tp4.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PagarTarjeta(int id, int cbu)
+        public async Task<IActionResult> PagarTarjeta(int id, int cajaIndex, int cajaId)
         {
             var sesion = HttpContext.Session.GetInt32("usuario");
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
@@ -340,7 +297,14 @@ namespace tp4.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
-            CajaDeAhorro? caja = _context.cajas.Where(caja => caja.cbu == cbu).FirstOrDefault(); ;
+            //string cbuStringFieldName = "cbu_" + cajaIndex;
+            //string cbuString = Request.Form[cbuStringFieldName];
+           // int? cbu = null;
+            //if (int.TryParse(cbuString, out int cbuValue))
+           // {
+           //     cbu = cbuValue;
+          //  }
+            CajaDeAhorro? caja = _context.cajas.Where(caja => caja.id == cajaId).FirstOrDefault(); ;
             Tarjeta? tarjeta = _context.tarjetas.Where(tarjeta => tarjeta.id == id).FirstOrDefault();
 
             if (tarjeta == null)

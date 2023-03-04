@@ -17,64 +17,78 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Caja de ahorro</th>
+                    <th scope="col">CBU</th>
                     <th scope="col">Saldo</th>
                     <th scope="col">Pagar</th>
 
                 </tr>
             </thead>
             <tbody>
-               
-                @if (ViewBag.cajasCbuUsu != null && ViewBag.cajasSaldoUsu != null)
-                {
-                    @foreach (var item1 in ViewBag.cajasCbuUsu)
-                    {
-                        var index = ViewBag.cajasCbuUsu.IndexOf(item1);
-                        var item2 = ViewBag.cajasSaldoUsu[index];
-                        <tr>
-                            <td>Cbu <input type="number" name="cbu" id="cbu" readonly placeholder="@item1" value="@item1" /></td>
-                            <td>@item2</td>
-                            <td><input type="submit" value="Pagar" class="btn btn-primary" /></td>
-                        </tr>
-                    }
-                } 
+                @if (ViewBag.cajasCbuUsu != null)
+    {
+                    @for (int i = 0; i < ViewBag.cajasCbuUsu.Count; i++)
+        {
+            <tr>
+                            <td><input type="number" name="cbu_@i" id="cbu_@i" readonly value="@ViewBag.cajasCbuUsu[i]" /></td>
+                            <td>@ViewBag.cajasSaldoUsu[i]</td>
+                <td>
+                                <form method="post" asp-action="PagarPago">
+                                    <input type="hidden" name="cajaId" value="@ViewBag.cajasIdUsu[i]" />
+                                    <input type="hidden" name="cbu" value="@ViewBag.cajasCbuUsu[i]" />
+                        <input type="submit" value="Pagar" class="btn btn-primary" />
+                    </form>
+                </td>
+            </tr>
+        }
+    }
             </tbody>
         </table>
 
-        <!-- 
+        
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Tarjetas</th>
                     <th scope="col">Consumo</th>
                     <th scope="col">Limite</th>
+                    <th scope="col">Pagar</th>
 
                 </tr>
             </thead>
             <tbody>
 
-                @if (ViewBag.tarjetaUsu != null && ViewBag.tarjetaConsumoUsu != null )
-                {
-                    @foreach (var item1 in ViewBag.tarjetaUsu)
-                    {
-                        var index = ViewBag.tarjetaUsu.IndexOf(item1);
-                        var item2 = ViewBag.tarjetaConsumoUsu[index];
-                        var item3 = ViewBag.tarjetaLimiteUsu[index];
-                        <tr>
-
-                            <input type="hidden" asp-route-id="@ViewBag.tarjetaIdUsu" />
-                            <td>Tarjeta <input type="number" name="tarjeta" id="tarjeta" readonly placeholder="@item1" value="@item1" /></td>
-                            <td>@item2</td>
-                            <td>@item3</td>
-                            <td><input type="submit" value="Pagar" class="btn btn-primary" /></td>
-                        </tr>
-                    }
-                }
+                @if (ViewBag.tarjetaUsu != null)
+    {
+                    @for (int i = 0; i < ViewBag.tarjetaUsu.Count; i++)
+        {
+            <tr>
+                            <td><input type="number" name="tarjeta_@i" id="tarjeta_@i" readonly value="@ViewBag.tarjetaUsu[i]" /></td>
+                            <td>@ViewBag.tarjetaConsumoUsu[i]</td>
+                            <td>@ViewBag.tarjetaLimiteUsu[i]</td>
+                <td>
+                                <form method="post" asp-action="PagarPago">
+                                    <input type="hidden" name="tarjetaId" value="@ViewBag.tarjetaIdUsu[i]" />
+                                    <input type="hidden" name="tarjeta" value="@ViewBag.tarjetaUsu[i]" />
+                                    <input type="submit" value="Pagar" class="btn btn-primary"  />
+                    </form>
+                </td>
+            </tr>
+        }
+    }
             </tbody>
         </table>
-        -->
+        
         <@if (ViewBag.msg != null && ViewBag.msg != "")
              {
     <h3 class="alert alert-danger mt-2">@ViewBag.msg</h3>
 }
 </form>
+<div>
+
+        <a asp-action="Index" class="btn btn-secondary mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z" />
+            <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
+        </svg>
+        Volver</a>
+        </div>

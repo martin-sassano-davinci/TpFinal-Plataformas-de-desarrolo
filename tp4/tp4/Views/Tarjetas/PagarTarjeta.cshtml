@@ -9,36 +9,38 @@
 
 
 
-<form asp-action="PagarTarjeta">
+<form asp-action="PagarTarjeta" >
     <input type="hidden" asp-for="id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <h4>Consumo a pagar: @ViewBag.tarjetaConsumo</h4>
-        <table class="table table-bordered">
+
+         <table class="table table-bordered">
             <thead>
-                <tr>
-                    <th scope="col">Caja de ahorro</th>
-                    <th scope="col">Saldo</th>
-                    <th scope="col">Pagar</th>
-                  
-                </tr>
+            <tr>
+                <th>CBU</th>
+                <th>Saldo</th>
+                <th>Pagar</th>
+            </tr>
             </thead>
         <tbody>
-                @if(ViewBag.cajasCbuUsuario != null && ViewBag.cajasSaldoUsuario != null){
-
-                @foreach (var item1 in ViewBag.cajasCbuUsuario)
+            @if (ViewBag.cajasCbuUsuario != null)
+    {
+        @for (int i = 0; i < ViewBag.cajasCbuUsuario.Count; i++)
         {
-                    var index = ViewBag.cajasCbuUsuario.IndexOf(item1);
-                    var item2 = ViewBag.cajasSaldoUsuario[index];
             <tr>
-                            <td><input type="number" name="cbu" id="cbu" readonly placeholder="@item1" value="@item1" /></td>
-                <td>@item2</td>
-                 <td><input type="submit" value="Pagar" class="btn btn-primary" /></td>
+                <td><input type="number" name="cbu_@i" id="cbu_@i" readonly value="@ViewBag.cajasCbuUsuario[i]" /></td>
+                <td>@ViewBag.cajasSaldoUsuario[i]</td>
+                <td>
+                    <form method="post" asp-action="PagarTarjeta">
+                        <input type="hidden" name="cajaId" value="@ViewBag.cajasIdUsuario[i]" />
+                        <input type="hidden" name="cbu" value="@ViewBag.cajasCbuUsuario[i]" />
+                        <input type="submit" value="Pagar" class="btn btn-primary" />
+                    </form>
+                </td>
             </tr>
         }
-      }
-    </tbody>
-  </table>
+    }
         <@if (ViewBag.msg != null && ViewBag.msg != "")
              {
     <h3 class="alert alert-danger mt-2">@ViewBag.msg</h3>

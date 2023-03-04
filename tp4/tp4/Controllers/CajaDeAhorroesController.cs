@@ -46,29 +46,7 @@ namespace tp4.Controllers
             }
         }
 
-        // GET: CajaDeAhorroes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            if (id == null || _context.cajas == null)
-            {
-                return NotFound();
-            }
-
-            var cajaDeAhorro = await _context.cajas
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (cajaDeAhorro == null)
-            {
-                return NotFound();
-            }
-
-            return View(cajaDeAhorro);
-        }
+        
 
         // GET: CajaDeAhorroes/Create
         public IActionResult Create()
@@ -117,69 +95,6 @@ namespace tp4.Controllers
             return View(cajaDeAhorro);
         }
 
-        // GET: CajaDeAhorroes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            if (id == null || _context.cajas == null)
-            {
-                return NotFound();
-            }
-
-            var cajaDeAhorro = await _context.cajas.FindAsync(id);
-            if (cajaDeAhorro == null)
-            {
-                return NotFound();
-            }
-            return View(cajaDeAhorro);
-        }
-
-        // POST: CajaDeAhorroes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,cbu,saldo")] CajaDeAhorro cajaDeAhorro)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            if (id != cajaDeAhorro.id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cajaDeAhorro);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CajaDeAhorroExists(cajaDeAhorro.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cajaDeAhorro);
-        }
-
         // GET: CajaDeAhorroes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -215,48 +130,34 @@ namespace tp4.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
-             try
+            try
+            {
+                CajaDeAhorro? cajaARemover = _context.cajas.Where(caja => caja.id == id).FirstOrDefault();
+                if (cajaARemover == null)
                 {
-                    CajaDeAhorro? cajaARemover = _context.cajas.Where(caja => caja.id == id).FirstOrDefault();
-                    if (cajaARemover == null)
-                    {
-                        ViewData["msg"] = "No se encontró la caja";
-                        return View();
-                    }
-                    if (cajaARemover.saldo != 0)
-                    {
-                        ViewData["msg"] = "No se puede eliminar una caja con saldo";
-                        return View();
-                }
-                    foreach (Usuario titular in cajaARemover.titulares) //Itero entre los titulares de la caja de ahorro
-                    {
-                        titular.cajas.Remove(cajaARemover);  //Saco la caja de ahorro de los titulares.
-                    }
-                    _context.cajas.Remove(cajaARemover); //Saco la caja de ahorro del banco
-                    _context.SaveChanges();
-
-                    return RedirectToAction("Index", "CajaDeAhorroes");
-                }
-                catch(Exception ex) 
-                {
-                    ViewData["msg"] = "Error: " + ex.Message;
+                    ViewData["msg"] = "No se encontró la caja";
                     return View();
+                }
+                if (cajaARemover.saldo != 0)
+                {
+                    ViewData["msg"] = "No se puede eliminar una caja con saldo";
+                    return View();
+                }
+                foreach (Usuario titular in cajaARemover.titulares) //Itero entre los titulares de la caja de ahorro
+                {
+                    titular.cajas.Remove(cajaARemover);  //Saco la caja de ahorro de los titulares.
+                }
+                _context.cajas.Remove(cajaARemover); //Saco la caja de ahorro del banco
+                _context.SaveChanges();
+
+                return RedirectToAction("Index", "CajaDeAhorroes");
             }
-            
-            /*
-            if (_context.cajas == null)
+            catch (Exception ex)
             {
-                return Problem("Entity set 'MiContexto.cajas'  is null.");
-            }
-            var cajaDeAhorro = await _context.cajas.FindAsync(id);
-            if (cajaDeAhorro != null && cajaDeAhorro.saldo == 0)
-            {
-                _context.cajas.Remove(cajaDeAhorro);
+                ViewData["msg"] = "Error: " + ex.Message;
+                return View();
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            */
         }
 
         private bool CajaDeAhorroExists(int id)
@@ -594,6 +495,11 @@ namespace tp4.Controllers
                 if (monto <= 0)
                 {
                     ViewData["msg"] = "Error al retirar, el monto tiene que ser mayor a 0";
+                    return View();
+                }
+                if(cajaOrigen == cajaDestino)
+                {
+                    ViewData["msg"] = "No se puede transferir a la misma cuenta";
                     return View();
                 }
                 cajaOrigen.saldo -= monto;

@@ -16,10 +16,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Tincho\source\repos\tp4\tp4
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Access/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/CajaDeAhorroes/AgregarUsuarioACaja.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FqYURlQWhvcnJvZXNcQWdyZWdhclVzdWFyaW9BQ2FqYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -34,14 +30,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/CajaDeAhorroes/Depositar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FqYURlQWhvcnJvZXNcRGVwb3NpdGFyLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/CajaDeAhorroes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FqYURlQWhvcnJvZXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/CajaDeAhorroes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FqYURlQWhvcnJvZXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/CajaDeAhorroes/EliminarUsuarioDeCaja.cshtml]
@@ -72,22 +60,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Movimientoes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Movimientoes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Movimientoes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Movimientoes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Movimientoes/FiltrarMovimientos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXEZpbHRyYXJNb3ZpbWllbnRvcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -96,20 +68,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Movimientoes/MostrarFiltrarMovimientos.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aW1pZW50b2VzXE1vc3RyYXJGaWx0cmFyTW92aW1pZW50b3MuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Pagoes/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb2VzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Pagoes/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb2VzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Pagoes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb2VzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Pagoes/Edit.cshtml]
@@ -132,14 +96,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhem9GaWpvZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/PlazoFijoes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhem9GaWpvZXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/PlazoFijoes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhem9GaWpvZXNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/PlazoFijoes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhem9GaWpvZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -160,10 +116,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFyamV0YXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Tarjetas/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFyamV0YXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Tarjetas/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFyamV0YXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -176,22 +128,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFyamV0YXNcUGFnYXJUYXJqZXRhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/UsuarioCajas/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb0NhamFzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/UsuarioCajas/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb0NhamFzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/UsuarioCajas/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb0NhamFzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/UsuarioCajas/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb0NhamFzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/UsuarioCajas/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb0NhamFzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -202,10 +138,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Usuarios/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Tincho/source/repos/tp4/tp4/Views/Usuarios/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Tincho/source/repos/tp4/tp4/Views/Usuarios/Edit.cshtml]

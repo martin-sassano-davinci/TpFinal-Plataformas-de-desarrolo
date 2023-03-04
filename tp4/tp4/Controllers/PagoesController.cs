@@ -46,8 +46,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if(usuarioLogeado.isAdmin == true)
             {
@@ -58,37 +57,15 @@ namespace tp4.Controllers
             return View(await miContexto.ToListAsync());
         }
 
-        // GET: Pagoes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario usuarioLogeado = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-
-            if (usuarioLogeado == null)
-            {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
-            }
-            if (id == null || _context.pagos == null)
-            {
-                return NotFound();
-            }
-
-            var pago = await _context.pagos
-                .Include(p => p.usuario)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (pago == null)
-            {
-                return NotFound();
-            }
-
-            return View(pago);
-        }
-
         // GET: Pagoes/Create
         public IActionResult Create()
         {
-            
+            var sesion = HttpContext.Session.GetInt32("usuario");
+            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             return View();
         }
 
@@ -105,8 +82,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
                 Pago nuevoPago = new Pago(usuarioLogeado, Nombre, Monto);
                 _context.pagos.Add(nuevoPago);
@@ -131,8 +107,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if (id == null || _context.pagos == null)
             {
@@ -160,8 +135,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if (id != pago.id)
             {
@@ -200,8 +174,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if (id == null || _context.pagos == null)
             {
@@ -229,8 +202,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             Pago pagoABorrar = _context.pagos.Where(pago => pago.id == id).FirstOrDefault();
             if (pagoABorrar == null)
@@ -249,21 +221,6 @@ namespace tp4.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
 
-
-            /*
-            if (_context.pagos == null)
-            {
-                return Problem("Entity set 'MiContexto.pagos'  is null.");
-            }
-            var pago = await _context.pagos.FindAsync(id);
-            if (pago != null)
-            {
-                _context.pagos.Remove(pago);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            */
         }
         
         private bool PagoExists(int id)
@@ -286,6 +243,7 @@ namespace tp4.Controllers
             }
 
             ViewBag.cajasCbuUsu = user.cajas.Where(c => c.saldo >= buscarPago.monto).Select(c => c.cbu).ToList();
+            ViewBag.cajasIdUsu = user.cajas.Where(c => c.saldo >= buscarPago.monto).Select(c => c.id).ToList();
             ViewBag.cajasSaldoUsu = user.cajas.Where(c => c.saldo >= buscarPago.monto).Select(c => c.saldo).ToList();
             ViewBag.pagoMonto = buscarPago.monto;
 
@@ -299,25 +257,23 @@ namespace tp4.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PagarPago(int id, int cbu, int tarjeta)
+        public async Task<IActionResult> PagarPago(int id, int? cajaId, int? tarjetaId)
         {
             var sesion = HttpContext.Session.GetInt32("usuario");
             Usuario usuarioLogeado = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             Pago pago = _context.pagos.Where(pago => pago.id == id).FirstOrDefault();
-            CajaDeAhorro caja = _context.cajas.Where(caja => caja.cbu == cbu).FirstOrDefault();
             if (pago == null)
             {
-                 //No se encuentra el pago
+                //No se encuentra el pago
                 ViewData["msg"] = "No se encuentró el pago";
                 return View();
             }
-            if(pago.monto == 0)
+            if (pago.monto == 0)
             {
                 ViewData["msg"] = "No se puede abonar un pago con un monto de 0";
                 return View();
@@ -328,12 +284,15 @@ namespace tp4.Controllers
                 ViewData["msg"] = "El pago que seleccionó ya está pago";
                 return View();
             }
+            CajaDeAhorro caja = _context.cajas.Where(caja => caja.id == cajaId).FirstOrDefault();
+            Tarjeta tarjeta = _context.tarjetas.Where(t => t.id == tarjetaId && t.id_titular == sesion).FirstOrDefault();
+
             if (caja != null)
             {
                 if (caja.saldo < pago.monto)
                 {
                     //No se encuantra caja
-                    ViewData["msg"] = "No se encuantró la caja";
+                    ViewData["msg"] = "No se encontró la caja";
                     return View();
                 }
                 caja.saldo -= pago.monto;
@@ -347,30 +306,33 @@ namespace tp4.Controllers
                 ViewData["msg"] = "Pago abonado correctamente";
                 return RedirectToAction("Index", "Pagoes");
             }
-            Tarjeta? tarjetaFind = _context.tarjetas.Where(t => t.numero == tarjeta).FirstOrDefault();
-            if (tarjeta == null || caja == null)
+            else if (tarjeta != null)
             {
-                //No se encuentra tarjeta
-                ViewData["msg"] = "Tarjeta no encontrada";
+                if ((tarjeta.limite - tarjeta.consumo) < pago.monto)
+                {
+                    //No tiene saldo
+                    ViewData["msg"] = "El monto del pago supera a la tarjeta que seleccionó";
+                    return View();
+                }
+                tarjeta.consumo += pago.monto;
+                this.modificarPago(pago);
+                pago.metodo = "Tarjeta";
+                _context.Update(tarjeta);
+                _context.Update(pago);
+                _context.SaveChanges();
+                ViewData["msg"] = "Pago abonado correctamente";
+                return RedirectToAction("Index", "Pagoes");
+            }
+            else
+            {
+                //No se encuentra ni la tarjeta ni la caja
+                ViewData["msg"] = "No se encontró ni la tarjeta ni la caja";
                 return View();
             }
-            if ((tarjetaFind.limite - tarjetaFind.consumo) < pago.monto)
-            {
-                //No tiene saldo
-                ViewData["msg"] = "La caja que seleccionó no tiene saldo";
-                return View();
-            }
-            tarjetaFind.consumo += pago.monto;
-            this.modificarPago(pago);
-            pago.metodo = "Tarjeta";
-            _context.Update(tarjeta);
-            _context.Update(pago);
-            _context.SaveChanges();
-            ViewData["msg"] = "Pago abonado correctamente";
-            return RedirectToAction("Index", "Pagoes");
         }
         public int modificarPago(Pago pago)
         {
+          
             try
             {
                 // Pago pagoAModificar = buscarPago(pago);

@@ -29,8 +29,7 @@ namespace tp4.Controllers
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
             if (user == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if(user.isAdmin == true)
             {
@@ -42,31 +41,7 @@ namespace tp4.Controllers
 
         }
 
-        // GET: PlazoFijoes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null)
-            {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
-            }
-            if (id == null || _context.plazosFijos == null)
-            {
-                return NotFound();
-            }
-
-            var plazoFijo = await _context.plazosFijos
-                .Include(p => p.titular)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (plazoFijo == null)
-            {
-                return NotFound();
-            }
-
-            return View(plazoFijo);
-        }
+        
 
         // GET: PlazoFijoes/Create
         public IActionResult Create()
@@ -76,8 +51,7 @@ namespace tp4.Controllers
 
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
 
             ViewData["id_titular"] = new SelectList(_context.usuarios, "id", "apellido");
@@ -96,8 +70,7 @@ namespace tp4.Controllers
            
             if (usuarioLogeado == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             try
             {
@@ -154,73 +127,7 @@ namespace tp4.Controllers
            
         
 
-        // GET: PlazoFijoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null)
-            {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
-            }
-            if (id == null || _context.plazosFijos == null)
-            {
-                return NotFound();
-            }
-
-            var plazoFijo = await _context.plazosFijos.FindAsync(id);
-            if (plazoFijo == null)
-            {
-                return NotFound();
-            }
-            ViewData["id_titular"] = new SelectList(_context.usuarios, "id", "apellido", plazoFijo.id_titular);
-            return View(plazoFijo);
-        }
-
-        // POST: PlazoFijoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,monto,fechaIni,fechaFin,tasa,pagado,id_titular,cbu")] PlazoFijo plazoFijo)
-        {
-            var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null)
-            {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
-            }
-            if (id != plazoFijo.id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(plazoFijo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PlazoFijoExists(plazoFijo.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["id_titular"] = new SelectList(_context.usuarios, "id", "apellido", plazoFijo.id_titular);
-            return View(plazoFijo);
-        }
-
+        
         // GET: PlazoFijoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -228,8 +135,7 @@ namespace tp4.Controllers
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
             if (user == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if (id == null || _context.plazosFijos == null)
             {
@@ -256,9 +162,8 @@ namespace tp4.Controllers
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
             if (user == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
-                
+                return RedirectToAction("Login", "Home");
+
             }
             try
             {
@@ -285,20 +190,6 @@ namespace tp4.Controllers
                 return View();
             }
 
-            /*         
-            if (_context.plazosFijos == null)
-            {
-                return Problem("Entity set 'MiContexto.plazosFijos'  is null.");
-            }
-            var plazoFijo = await _context.plazosFijos.FindAsync(id);
-            if (plazoFijo != null)
-            {
-                _context.plazosFijos.Remove(plazoFijo);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            */
         }
 
         private bool PlazoFijoExists(int id)
@@ -328,8 +219,7 @@ namespace tp4.Controllers
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
             if (user == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
 
             }
             DateTime fechaIni = pFijo.fechaIni;

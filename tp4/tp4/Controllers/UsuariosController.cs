@@ -40,43 +40,18 @@ namespace tp4.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            //funca
-            //usuarioLogueado = HttpContext.Session.GetString();
+
             var sesion = HttpContext.Session.GetInt32("usuario");
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            //var admin = HttpContext.Session.GetInt32("admin");
-
-            if (sesion != null && user.isAdmin == true)
-            {
-                return View(await _context.usuarios.ToListAsync());
-            } else if (sesion != null)
-            {
-                return View(await _context.usuarios.Where(u => u.id == sesion).ToListAsync());
-                
-            } else
+            if (user == null)
             {
                 return RedirectToAction("Login", "Home");
             }
-            
-           
-        }
-
-        // GET: Usuarios/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.usuarios == null)
+            if(user.isAdmin == true)
             {
-                return NotFound();
+                return View(await _context.usuarios.ToListAsync());
             }
-
-            var usuario = await _context.usuarios
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            return View(usuario);
+            return View(await _context.usuarios.Where(u => u.id == sesion).ToListAsync());
         }
 
         // GET: Usuarios/Create
@@ -84,7 +59,6 @@ namespace tp4.Controllers
         {
             return View();
         }
-
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -107,21 +81,17 @@ namespace tp4.Controllers
                 return View();
             }
                 
- 
-                /*
-                if (ModelState.IsValid)
-                {
-                    _context.Add(usuario);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(usuario);
-                */
             }
 
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var sesion = HttpContext.Session.GetInt32("usuario");
+            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             if (id == null || _context.usuarios == null)
             {
                 return NotFound();
@@ -140,38 +110,9 @@ namespace tp4.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int dni, string nombre, string apellido, string mail, int intentosFallidos, bool bloqueado, string password, bool isAdmin )
+        public async Task<IActionResult> Edit(int id, int dni, string nombre, string apellido, string mail, int intentosFallidos, bool bloqueado, string? password, bool isAdmin )
         {
-            /*[Bind("id,dni,nombre,apellido,mail,intentosFallidos,bloqueado,password,isAdmin")] Usuario usuario*/
-            /*
-            if (id != usuario.id)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(usuario);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(usuario.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(usuario);
-            @Html.DisplayNameFor(model => model.isAdmin)
-            */
 
 
 
@@ -181,24 +122,27 @@ namespace tp4.Controllers
                 var sesion = HttpContext.Session.GetInt32("usuario");
                 Usuario? usuarioAModificar = await _context.usuarios.FindAsync(id);
                 Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
+                if (user == null)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
                 if (usuarioAModificar == null)
                     {
                         ViewData["msg"] = "No se encontro el usuario";
                         return View();
                     }
-                if(user == null)
-                {
-                    ViewData["msg"] = "No tiene permiso para editar usuarios";
-                    return View();
-                }
+                
                     if (user != null && user.isAdmin == false)
                     {
                         usuarioAModificar.dni = dni;
                         usuarioAModificar.nombre= nombre;
                         usuarioAModificar.apellido= apellido;
                         usuarioAModificar.mail = mail;
+                    if (password != null)
+                    {
                         usuarioAModificar.password = password;
-                        _context.Update(usuarioAModificar);
+                    }
+                    _context.Update(usuarioAModificar);
                         await _context.SaveChangesAsync();
                         ViewData["msg"] = "Usuario modificado con exito";
                         return View();
@@ -211,7 +155,10 @@ namespace tp4.Controllers
                         usuarioAModificar.mail = mail;
                         usuarioAModificar.intentosFallidos= intentosFallidos;
                         usuarioAModificar.bloqueado = bloqueado;
+                        if(password != null)
+                    {
                         usuarioAModificar.password = password;
+                    }
                         usuarioAModificar.isAdmin = isAdmin;
                     if (intentosFallidos >= 3 && bloqueado == false)
                     {
@@ -239,8 +186,12 @@ namespace tp4.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var sesion = HttpContext.Session.GetInt32("usuario");
-            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if(user == null || user.isAdmin == false)
+            Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();     
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            if ( user.isAdmin == false)
             {
                 ViewData["msg"] = "No tiene permiso para eliminar usuarios";
                 return View();
@@ -268,7 +219,11 @@ namespace tp4.Controllers
         {
             var sesion = HttpContext.Session.GetInt32("usuario");
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            if (user == null || user.isAdmin == false)
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            if (user.isAdmin == false)
             {
                 ViewData["msg"] = "No tiene permiso para eliminar usuarios";
                 return View();

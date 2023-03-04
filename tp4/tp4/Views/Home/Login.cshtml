@@ -1,50 +1,37 @@
-﻿@model Usuario
+﻿@model tp4.Models.Usuario
 @{
     ViewData["Title"] = "Login Page";
 }
 <h1>@ViewData["Title"]</h1>
-<!--
-<form>
-    <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
-    </div>
-    <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
--->
-@using (Html.BeginForm("Login", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
 
-        <div class="form-group">
-        @Html.LabelFor(m => m.dni)
-        @Html.TextBoxFor(m => m.dni, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.dni)
-        </div>
 
-        <div class="form-group">
-        @Html.LabelFor(m => m.password)
-        @Html.PasswordFor(m => m.password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.password)
-        </div>
-    @if (ViewData["msg"] != "" && ViewData["msg"] != null)
-    {
-        <h4 class="alert alert-danger p-2 mt-lg-2">@ViewData["msg"]</h4>
-    }
-    
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login" asp-controller="Home">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <button type="submit" class="btn btn-primary mt-2">Ingresar</button>
-        <p>si no tenes cuenta, registratate haciendo click <a  asp-controller="Usuarios" asp-action="Create">
-    acá
-    </a></p>
-    
-}
+            <div class="form-group">
+                <label asp-for="dni" class="control-label"></label>
+                <input asp-for="dni" class="form-control" />
+                <span asp-validation-for="dni" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="password" class="control-label"></label>
+                <input asp-for="password" class="form-control" />
+                <span asp-validation-for="password" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary mt-2" />
+            </div>
+            <div>
+                <h3>Si no tenes cuenta, hace click <a asp-action="Create" asp-controller="Usuarios">acá</a> para registrarte</h3>
+            </div>
+            @if (ViewData["msg"] != null && ViewData["msg"] != "")
+            {
+                <h3 class="alert alert-danger">@ViewData["msg"]</h3>
+            }
+        </form>
+
+    </div>
+</div>

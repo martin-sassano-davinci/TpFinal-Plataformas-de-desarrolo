@@ -39,9 +39,9 @@ namespace tp4.Controllers
 
         // Método para procesar la información del formulario de inicio de sesión
         [HttpPost]
-        public ActionResult Login(Usuario model) // cambiar
+        public ActionResult Login(int dni, String password) // cambiar
         {
-            Usuario user = _context.usuarios.Where(u => u.dni == model.dni).FirstOrDefault();
+            Usuario user = _context.usuarios.Where(u => u.dni == dni).FirstOrDefault();
 
 
             // Validar el nombre de usuario y la contraseña
@@ -61,7 +61,7 @@ namespace tp4.Controllers
                 ViewData["msg"] = "Usuario bloqueado";
                 return View();
                 }
-                if (user?.password != model.password)
+                if (user?.password != password)
                 {
                     user.intentosFallidos++;
                     _context.Update(user);

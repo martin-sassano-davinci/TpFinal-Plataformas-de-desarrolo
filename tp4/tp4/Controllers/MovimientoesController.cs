@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using tp4.Data;
 using tp4.Models;
@@ -20,10 +22,21 @@ namespace tp4.Controllers
         public MovimientoesController(MiContexto context)
         {
             _context = context;
+            _context = context;
+            _context.usuarios
+                   .Include(u => u.tarjetas)
+                   .Include(u => u.cajas)
+                   .Include(u => u.pf)
+                   .Include(u => u.pagos)
+                   .Load();
             _context.cajas
                 .Include(c => c.movimientos)
                 .Include(c => c.titulares)
                 .Load();
+            _context.tarjetas.Load();
+            _context.pagos.Load();
+            _context.movimientos.Load();
+            _context.plazosFijos.Load();
         }
 
         // GET: Movimientoes
@@ -32,195 +45,59 @@ namespace tp4.Controllers
 
             var sesion = HttpContext.Session.GetInt32("usuario");
             Usuario user = _context.usuarios.Where(u => u.id == sesion).FirstOrDefault();
-            //Movimiento? movimientoCaja = _context.movimientos.Where(m => m.id_Caja == id).
             if (user == null)
             {
-                ViewData["msg"] = "No tenes permiso para acceder, por favor inicia sesion";
-                return View();
+                return RedirectToAction("Login", "Home");
             }
             if (id == null)
             {
                 ViewData["msg"] = "No se encontro la caja";
                 return View();
             }
-            ViewBag.id = id;
+            ViewBag.idCajaIn = id; //asp - route - id = "@item.id"
+            
             var miContexto = _context.movimientos.Where(m => m.id_Caja == id);
             return View(await miContexto.ToListAsync());
         }
-        // GET: FiltrarMovimientos
-        public IActionResult FiltrarMovimientos()
+
+        // GET: Movimientos
+        public IActionResult FiltrarMovimientos(int? id, string detalle, float? monto, DateTime? fecha, bool busqueda = false)
         {
-          
-            return View();
+            var movimientos = _context.movimientos.Where(m => m.id_Caja == id).AsQueryable();
             
+
+            if (busqueda && !string.IsNullOrEmpty(detalle))
+            {
+                    movimientos = movimientos.Where(m => m.detalle.Contains(detalle));
+ 
+            }
+
+            if (busqueda && monto.HasValue)
+            {
+
+                    movimientos = movimientos.Where(m => m.monto == monto.Value);
+             
+            }
+
+            if (busqueda && fecha.HasValue)
+            {
+                
+                    movimientos = movimientos.Where(m => m.fecha.Date == fecha.Value.Date);             
+            }
+            if (!busqueda)
+            {
+                movimientos = movimientos.Take(0); // no devuelve ningún movimiento
+            }
+           
+            return View(movimientos.ToList());
         }
 
-        // POST: FiltrarMovimientos
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FiltrarMovimientos(int id, String? detalle, float? monto, DateTime fecha)
+        public IActionResult FiltrarMovimientos(string detalle, float? monto, DateTime? fecha, string buscar)
         {
-            var miContexto = _context.movimientos.Where(m => m.id_Caja == id).Include(m => m.caja);
-            var salida = miContexto.ToList();
-            if (detalle != null)
-            {
-                salida = salida.Where(u => u.detalle.Contains(detalle)).ToList();
-
-            }
-            if (monto != null)
-            {
-                salida = salida.Where(u => u.monto >= monto).ToList();
-
-            }
-            
-            if (fecha != null)
-            {
-                salida = salida.Where(u => u.fecha == fecha ).ToList();
-            }
-
-            return View(salida.ToList());
+            return RedirectToAction("FiltrarMovimientos", new { detalle = detalle, monto = monto, fecha = fecha, busqueda = true });
         }
 
-        public async Task<IActionResult> MostrarFiltrarMovimientos()
-        {
-            return View();
-        }
-        // GET: Movimientoes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.movimientos == null)
-            {
-                return NotFound();
-            }
-
-            var movimiento = await _context.movimientos
-                .Include(m => m.caja)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (movimiento == null)
-            {
-                return NotFound();
-            }
-
-            return View(movimiento);
-        }
-
-        // GET: Movimientoes/Create
-        public IActionResult Create()
-        {
-            ViewData["id_Caja"] = new SelectList(_context.cajas, "id", "id");
-            return View();
-        }
-
-        // POST: Movimientoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,detalle,monto,fecha,id_Caja")] Movimiento movimiento)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(movimiento);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["id_Caja"] = new SelectList(_context.cajas, "id", "id", movimiento.id_Caja);
-            return View(movimiento);
-        }
-
-        // GET: Movimientoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.movimientos == null)
-            {
-                return NotFound();
-            }
-
-            var movimiento = await _context.movimientos.FindAsync(id);
-            if (movimiento == null)
-            {
-                return NotFound();
-            }
-            ViewData["id_Caja"] = new SelectList(_context.cajas, "id", "id", movimiento.id_Caja);
-            return View(movimiento);
-        }
-
-        // POST: Movimientoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,detalle,monto,fecha,id_Caja")] Movimiento movimiento)
-        {
-            if (id != movimiento.id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(movimiento);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovimientoExists(movimiento.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["id_Caja"] = new SelectList(_context.cajas, "id", "id", movimiento.id_Caja);
-            return View(movimiento);
-        }
-
-        // GET: Movimientoes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.movimientos == null)
-            {
-                return NotFound();
-            }
-
-            var movimiento = await _context.movimientos
-                .Include(m => m.caja)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (movimiento == null)
-            {
-                return NotFound();
-            }
-
-            return View(movimiento);
-        }
-
-        // POST: Movimientoes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.movimientos == null)
-            {
-                return Problem("Entity set 'MiContexto.movimientos'  is null.");
-            }
-            var movimiento = await _context.movimientos.FindAsync(id);
-            if (movimiento != null)
-            {
-                _context.movimientos.Remove(movimiento);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool MovimientoExists(int id)
         {
